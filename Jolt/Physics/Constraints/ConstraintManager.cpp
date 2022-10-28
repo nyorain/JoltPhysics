@@ -12,8 +12,8 @@
 
 JPH_NAMESPACE_BEGIN
 
-void ConstraintManager::Add(Constraint **inConstraints, int inNumber)						
-{ 
+void ConstraintManager::Add(Constraint **inConstraints, int inNumber)
+{
 	UniqueLock lock(mConstraintsMutex, EPhysicsLockTypes::ConstraintsList);
 
 	mConstraints.reserve(mConstraints.size() + inNumber);
@@ -189,7 +189,7 @@ void ConstraintManager::DrawConstraints(DebugRenderer *inRenderer) const
 
 	UniqueLock lock(mConstraintsMutex, EPhysicsLockTypes::ConstraintsList);
 
-	for (const Ref<Constraint> &c : mConstraints)			
+	for (const Ref<Constraint> &c : mConstraints)
 		c->DrawConstraint(inRenderer);
 }
 
@@ -215,7 +215,7 @@ void ConstraintManager::DrawConstraintReferenceFrame(DebugRenderer *inRenderer) 
 #endif // JPH_DEBUG_RENDERER
 
 void ConstraintManager::SaveState(StateRecorder &inStream) const
-{	
+{
 	UniqueLock lock(mConstraintsMutex, EPhysicsLockTypes::ConstraintsList);
 
 	// Write state of constraints

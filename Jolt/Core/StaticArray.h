@@ -62,7 +62,7 @@ public:
 	/// Construct element at the back of the array
 	template <class... A>
 	void				emplace_back(A &&... inElement)
-	{	
+	{
 		JPH_ASSERT(mSize < N);
 		::new (&mElements[mSize++]) T(forward<A>(inElement)...);
 	}
@@ -96,12 +96,17 @@ public:
 	void				resize(size_type inNewSize)
 	{
 		JPH_ASSERT(inNewSize <= N);
-		if (!is_trivially_constructible<T>() && mSize < inNewSize)
-			for (T *element = reinterpret_cast<T *>(mElements) + mSize, *element_end = reinterpret_cast<T *>(mElements) + inNewSize; element < element_end; ++element)
+		if (!is_trivially_constructible<T>()) { // && mSize < inNewSize) {
+			for (T *element = reinterpret_cast<T *>(mElements) + mSize, *element_end = reinterpret_cast<T *>(mElements) + inNewSize; element < element_end; ++element) {
 				::new (element) T;
-		else if (!is_trivially_destructible<T>() && mSize > inNewSize)
-			for (T *element = reinterpret_cast<T *>(mElements) + inNewSize, *element_end = reinterpret_cast<T *>(mElements) + mSize; element < element_end; ++element)
+			}
+		}
+		if (!is_trivially_destructible<T>()) { // && mSize > inNewSize) {
+			for (T *element = reinterpret_cast<T *>(mElements) + inNewSize, *element_end = reinterpret_cast<T *>(mElements) + mSize; element < element_end; ++element) {
 				element->~T();
+			}
+		}
+
 		mSize = inNewSize;
 	}
 
@@ -242,7 +247,7 @@ public:
 
 		return *this;
 	}
-	
+
 	/// Comparing arrays
 	bool				operator == (const StaticArray<T, N> &inRHS) const
 	{
@@ -263,7 +268,7 @@ public:
 				return true;
 		return false;
 	}
-	
+
 protected:
 	struct alignas(T) Storage
 	{
